@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Load Tester</title>
+    <script>
+      // Apply the persisted theme before first paint to avoid a flash of the
+      // wrong color scheme. Must stay in sync with src/theme.ts.
+      (function () {
+        var choice;
+        try {
+          choice = localStorage.getItem('theme');
+        } catch {
+          /* storage unavailable — fall through to the OS setting */
+        }
+        var dark =
+          choice === 'dark' ||
+          (choice !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', dark);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

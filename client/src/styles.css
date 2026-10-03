@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+/*
+ * Class-based dark mode: the .dark class on <html> (set by the inline script
+ * in index.html and src/theme.ts) wins over the OS setting, which only seeds
+ * the initial value.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design tokens. The light values are the defaults in @theme; html.dark
+ * overrides the same custom properties, so utilities like bg-surface or
+ * text-ink-2 flip automatically — and recharts reads the same vars for
+ * series/grid/axis colors, so charts re-theme without a re-render.
+ *
+ * Chart series colors are the validated 3-slot categorical palette from the
+ * dataviz reference instance (adjacent + all-pairs CVD checks pass on both
+ * surfaces); the aqua slot is sub-3:1 on light surfaces, which is covered by
+ * the charts' direct end labels plus the results table view.
+ */
+@theme {
+  --color-page: #f4f6f8;
+  --color-surface: #ffffff;
+  --color-surface-2: #f2f4f7;
+  --color-line: #e4e7ec;
+
+  --color-ink: #101828;
+  --color-ink-2: #475467;
+  --color-ink-3: #98a2b3;
+
+  --color-accent: #2a78d6;
+  --color-accent-strong: #1c5cab;
+  --color-accent-soft: #eaf2fc;
+  --color-accent-ink: #ffffff;
+
+  --color-danger-ink: #b42318;
+  --color-danger-bg: #fef3f2;
+  --color-danger-line: #fecdca;
+
+  --color-ok-bg: #e8f6ee;
+  --color-ok-line: #bfe6cf;
+  --color-ok-ink: #067647;
+  --color-ok-dot: #17b26a;
+
+  --color-warn-bg: #fffaeb;
+  --color-warn-line: #fedf89;
+  --color-warn-ink: #92400e;
+
+  --color-critical: #d03b3b;
+  --color-critical-strong: #b73333;
+
+  /* Chart series + chrome, consumed by recharts via var(...). */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --chart-grid: #e8ebef;
+  --chart-axis: #cfd4dd;
+  --chart-muted: #7d8698;
+  --chart-ink: #475467;
+  --status-critical: #d03b3b;
+}
+
+html.dark {
+  color-scheme: dark;
+
+  --color-page: #0c111d;
+  --color-surface: #161b26;
+  --color-surface-2: #1d2432;
+  --color-line: #2a3140;
+
+  --color-ink: #f0f2f5;
+  --color-ink-2: #9aa4b5;
+  --color-ink-3: #667085;
+
+  --color-accent: #3987e5;
+  --color-accent-strong: #5598e7;
+  --color-accent-soft: #16233a;
+
+  --color-danger-ink: #f97066;
+  --color-danger-bg: #2a1417;
+  --color-danger-line: #55262a;
+
+  --color-ok-bg: #10231a;
+  --color-ok-line: #234634;
+  --color-ok-ink: #57d9a3;
+  --color-ok-dot: #32d583;
+
+  --color-warn-bg: #241d0e;
+  --color-warn-line: #4a3a12;
+  --color-warn-ink: #fbbf24;
+
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --chart-grid: #222a3a;
+  --chart-axis: #2e374a;
+  --chart-muted: #808b9f;
+  --chart-ink: #9aa4b5;
+}
+
+:root {
+  color-scheme: light;
+}
+
+@layer components {
+  /* Text input / select / textarea, shared by the whole config form. */
+  .field {
+    @apply w-full rounded-lg border border-line bg-surface px-2.5 py-1.5 text-sm text-ink transition-colors
+      placeholder:text-ink-3
+      focus:border-accent focus:outline-hidden focus:ring-2 focus:ring-accent/30
+      disabled:cursor-not-allowed disabled:bg-surface-2 disabled:text-ink-3;
+  }
+
+  .btn-primary {
+    @apply rounded-lg bg-accent px-3.5 py-2 text-sm font-semibold text-accent-ink transition-colors
+      hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-danger {
+    @apply rounded-lg bg-critical px-3.5 py-2 text-sm font-semibold text-white transition-colors
+      hover:bg-critical-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-critical
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply rounded-lg border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink-2 transition-colors
+      hover:border-ink-3 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+}
