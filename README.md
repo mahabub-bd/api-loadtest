@@ -15,13 +15,13 @@ client/   React + Vite + Tailwind UI
   Dockerfile         multi-stage build → nginx serving the bundle
   nginx.conf         static serving + /api reverse proxy to the server
 server/   NestJS backend
-  Dockerfile         multi-stage build → slim node:22-alpine runtime
   src/main.ts                     bootstrap (CORS, 1MB JSON body, localhost bind)
   src/app.module.ts
   src/error-shape.filter.ts       errors as { error: message } for the client
   src/benchmark/benchmark.service.ts    undici benchmark engine + run lock
   src/benchmark/benchmark.controller.ts /api/load-test, /stream, /api/sample
   src/benchmark/parse-config.ts   request validation
+Dockerfile           server image (repo-root context — workspace files needed)
 docker-compose.yml   runs both containers; UI on :8080
 ```
 
