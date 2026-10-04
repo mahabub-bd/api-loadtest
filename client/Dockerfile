@@ -1,20 +1,21 @@
 # syntax=docker/dockerfile:1
 
-# ---- Build stage: install workspace deps and build the Vite bundle ----
+# NOTE: the build context is this client/ directory (Dokploy builds with the
+# Dockerfile's own folder as context), so all COPY paths are relative to it.
+
+# ---- Build stage: install deps and build the Vite bundle ----
 FROM node:22-alpine AS build
-WORKDIR /repo
+WORKDIR /app
 RUN corepack enable
 
-# Copy manifests + lockfile first for better layer caching
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY client/package.json client/
-RUN pnpm install --frozen-lockfile
+COPY package.json ./
+RUN pnpm install --no-frozen-lockfile
 
-COPY client/ client/
-RUN pnpm --filter api-loadtest-client build
+COPY . .
+RUN pnpm run build
 
 # ---- Runtime stage: nginx serves the static bundle and proxies /api ----
 FROM nginx:1.27-alpine
-COPY client/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /repo/client/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
